@@ -22,7 +22,7 @@ public class SafeConsoleInputHandle : SafeHandleZeroOrMinusOneIsInvalid
 	}
 
 	protected override bool ReleaseHandle()
-		=> throw new InvalidOperationException("Console handles cannot be released.");
+		=> throw new NotSupportedException();
 
 	private HANDLE GetStdInput()
 	{
