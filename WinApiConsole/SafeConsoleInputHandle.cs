@@ -9,19 +9,21 @@ public class SafeConsoleInputHandle : SafeHandleZeroOrMinusOneIsInvalid
 
 	public SafeConsoleInputHandle() : this(false)
 	{
-		RefetchHandle();
-		_eventHandle = new EventWaitHandle(false, EventResetMode.ManualReset) //TODO don't waste a handle each time
+		Handle = FetchHandle();
+		EventHandle = new EventWaitHandle(false, EventResetMode.ManualReset) //TODO don't waste a handle each time
 		{
 			SafeWaitHandle = new SafeWaitHandle(handle, false)
 		};
 	}
 
+	public nint Handle { get; }
+
+	public EventWaitHandle EventHandle { get; }
+
 	protected override bool ReleaseHandle()
 		=> throw new NotSupportedException();
 
-	public nint Handle => RefetchHandle();
-
-	private HANDLE RefetchHandle()
+	private HANDLE FetchHandle()
 	{
 		const uint STD_INPUT_HANDLE = unchecked((uint)-10);
 
