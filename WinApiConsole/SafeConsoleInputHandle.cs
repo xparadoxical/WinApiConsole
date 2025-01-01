@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using System.Runtime.CompilerServices;
+
+using Microsoft.Win32.SafeHandles;
 
 using WinApiConsole;
 
@@ -9,10 +11,10 @@ public class SafeStandardInputHandle : SafeStandardHandle
 {
 	public SafeStandardInputHandle() : base(StandardHandleType.Input)
 	{
-		EventHandle = new EventWaitHandle(false, EventResetMode.ManualReset) //TODO don't waste a handle each time
-		{
-			SafeWaitHandle = new SafeWaitHandle(handle, false)
-		};
+		EventHandle = EventWaitHandleConstructor(new SafeWaitHandle(handle, false));
+
+		[UnsafeAccessor(UnsafeAccessorKind.Constructor)]
+		static extern EventWaitHandle EventWaitHandleConstructor(SafeWaitHandle handle);
 	}
 
 	public nint Handle => handle;
