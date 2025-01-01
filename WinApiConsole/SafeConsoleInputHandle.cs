@@ -1,34 +1,21 @@
 ﻿using Microsoft.Win32.SafeHandles;
 
-using TerraFX.Interop.Windows;
+using WinApiConsole;
 
 namespace WinapiConsole;
-public class SafeConsoleInputHandle : SafeHandleZeroOrMinusOneIsInvalid
-{
-	private SafeConsoleInputHandle(bool ownsHandle) : base(ownsHandle) { }
 
-	public SafeConsoleInputHandle() : this(false)
+//SafeConsoleInputHandle? does this require a console input buffer handle and can't use a file handle from redirected stdin?
+public class SafeStandardInputHandle : SafeStandardHandle
+{
+	public SafeStandardInputHandle() : base(StandardHandleType.Input)
 	{
-		Handle = FetchHandle();
 		EventHandle = new EventWaitHandle(false, EventResetMode.ManualReset) //TODO don't waste a handle each time
 		{
 			SafeWaitHandle = new SafeWaitHandle(handle, false)
 		};
 	}
 
-	public nint Handle { get; }
+	public nint Handle => handle;
 
 	public EventWaitHandle EventHandle { get; }
-
-	protected override bool ReleaseHandle()
-		=> throw new NotSupportedException();
-
-	private HANDLE FetchHandle()
-	{
-		const uint STD_INPUT_HANDLE = unchecked((uint)-10);
-
-		var handle = Windows.GetStdHandle(STD_INPUT_HANDLE);
-		SetHandle(handle);
-		return handle;
-	}
 }
