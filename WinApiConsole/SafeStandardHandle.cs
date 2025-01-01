@@ -13,5 +13,5 @@ public class SafeStandardHandle : SafeHandleZeroOrMinusOneIsInvalid
 	private void SetHandle(StandardHandleType type) => SetHandle(Windows.GetStdHandle((uint)type));
 
 	protected override bool ReleaseHandle()
-		=> throw new NotSupportedException();
+		=> Windows.CloseHandle((HANDLE)handle);
 }
