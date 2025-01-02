@@ -2,9 +2,7 @@
 
 using Microsoft.Win32.SafeHandles;
 
-using WinApiConsole;
-
-namespace WinapiConsole;
+namespace WinApiConsole;
 
 //SafeConsoleInputHandle? does this require a console input buffer handle and can't use a file handle from redirected stdin?
 public class SafeStandardInputHandle : SafeStandardHandle

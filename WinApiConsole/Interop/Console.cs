@@ -2,7 +2,7 @@
 
 using TerraFX.Interop.Windows;
 
-namespace WinapiConsole.Interop;
+namespace WinApiConsole.Interop;
 internal unsafe partial class Console
 {
 	[LibraryImport("kernel32", SetLastError = true, EntryPoint = "ReadConsoleInputExW")]

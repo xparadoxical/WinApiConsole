@@ -3,8 +3,6 @@ using System.ComponentModel;
 
 using TerraFX.Interop.Windows;
 
-using WinapiConsole;
-
 namespace WinApiConsole;
 public class ConsoleInputReader
 {

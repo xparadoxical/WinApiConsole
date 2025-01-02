@@ -1,4 +1,4 @@
-﻿namespace WinapiConsole;
+﻿namespace WinApiConsole;
 public sealed class PinnableBox<T>(T? value)
 {
 	private T? _value = value;
