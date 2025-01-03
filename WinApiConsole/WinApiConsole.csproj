@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hertzole.ArrayPoolScope" Version="2.2.1" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.1" />
   </ItemGroup>
 

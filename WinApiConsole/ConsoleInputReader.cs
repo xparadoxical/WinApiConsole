@@ -1,6 +1,8 @@
 ﻿using System.Buffers;
 using System.ComponentModel;
 
+using Hertzole.Buffers;
+
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
@@ -18,7 +20,7 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 		return tcs.Task;
 	}
 
-	public unsafe IEnumerable<INPUT_RECORD> ReadEachInput()
+	public unsafe ArrayPoolScope<INPUT_RECORD> ReadEachInput()
 	{
 		var inputHandle = (HANDLE)handle.Handle;
 		var recordsAvailable = new PinnableBox<uint>(0);
@@ -29,15 +31,8 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 					throw new Win32Exception();
 		}
 
-		scoped Span<INPUT_RECORD> buffer;
-		INPUT_RECORD[]? bufferArray = null;
-		if (recordsAvailable <= 24)
-			buffer = stackalloc INPUT_RECORD[(int)recordsAvailable.Value];
-		else
-		{
-			bufferArray = ArrayPool<INPUT_RECORD>.Shared.Rent((int)recordsAvailable.Value);
-			buffer = bufferArray.AsSpan(..(int)recordsAvailable.Value);
-		}
+		var ret = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable.Value);
+		var buffer = UnsafeArrayScope.GetArray(ret);
 
 		var recordsRead = new PinnableBox<uint>(0);
 		unsafe
@@ -48,17 +43,13 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 				const int CONSOLE_READ_NOWAIT = 0x0002;
 				if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, pRecordsRead, CONSOLE_READ_NOWAIT))
 				{
-					if (bufferArray is not null)
-						ArrayPool<INPUT_RECORD>.Shared.Return(bufferArray);
+					if (buffer is not null)
+						ret.Dispose();
 					throw new Win32Exception();
 				}
 			}
 		}
 
-		foreach (var record in buffer)
-			yield return record;
-
-		if (bufferArray is not null)
-			ArrayPool<INPUT_RECORD>.Shared.Return(bufferArray);
+		return ret;
 	}
 }
