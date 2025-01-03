@@ -31,7 +31,7 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 
 		scoped Span<INPUT_RECORD> buffer;
 		INPUT_RECORD[]? bufferArray = null;
-		if (recordsAvailable <= 64)
+		if (recordsAvailable <= 24)
 			buffer = stackalloc INPUT_RECORD[(int)recordsAvailable.Value];
 		else
 		{
