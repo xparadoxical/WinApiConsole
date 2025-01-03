@@ -5,8 +5,8 @@ using TerraFX.Interop.Windows;
 namespace WinApiConsole.Interop;
 internal unsafe partial class Console
 {
-	[LibraryImport("kernel32", SetLastError = true, EntryPoint = "ReadConsoleInputExW")]
-	public static partial BOOL ReadConsoleInputEx(HANDLE hConsoleInput, INPUT_RECORD* lpBuffer, uint nLength, uint* lpNumberOfEventsRead, ushort wFlags);
+	[DllImport("kernel32", SetLastError = true, EntryPoint = "ReadConsoleInputExW")]
+	public static extern BOOL ReadConsoleInputEx(HANDLE hConsoleInput, INPUT_RECORD* lpBuffer, uint nLength, uint* lpNumberOfEventsRead, ushort wFlags);
 
 	[Flags]
 	public enum ReadBehavior : ushort

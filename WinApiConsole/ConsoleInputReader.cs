@@ -4,12 +4,14 @@ using System.ComponentModel;
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
-public class ConsoleInputReader
+public class ConsoleInputReader(SafeStandardInputHandle handle)
 {
+	public void SetHandle(SafeStandardInputHandle newHandle) => handle = newHandle;
+
 	public Task WhenInputAvailable()
 	{
 		var tcs = new TaskCompletionSource();
-		var registration = ThreadPool.RegisterWaitForSingleObject(_eventHandle, (_, _) => tcs.SetResult(), null, -1, true);
+		var registration = ThreadPool.RegisterWaitForSingleObject(handle.EventHandle, (_, _) => tcs.SetResult(), null, -1, true);
 
 		var t = tcs.Task;
 		t.ContinueWith(_ => registration.Unregister(null));
@@ -18,7 +20,7 @@ public class ConsoleInputReader
 
 	public unsafe IEnumerator<INPUT_RECORD> ReadEachInput(Action<INPUT_RECORD> recordHandler)
 	{
-		var inputHandle = GetStdInput();
+		var inputHandle = (HANDLE)handle.Handle;
 		var recordsAvailable = new PinnableBox<uint>(0);
 		unsafe
 		{
