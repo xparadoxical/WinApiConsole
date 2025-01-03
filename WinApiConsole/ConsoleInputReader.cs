@@ -18,7 +18,7 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 		return tcs.Task;
 	}
 
-	public unsafe IEnumerator<INPUT_RECORD> ReadEachInput(Action<INPUT_RECORD> recordHandler)
+	public unsafe IEnumerable<INPUT_RECORD> ReadEachInput()
 	{
 		var inputHandle = (HANDLE)handle.Handle;
 		var recordsAvailable = new PinnableBox<uint>(0);
