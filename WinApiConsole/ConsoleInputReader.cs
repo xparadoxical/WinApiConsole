@@ -23,30 +23,25 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 	public unsafe ArrayPoolScope<INPUT_RECORD> ReadEachInput()
 	{
 		var inputHandle = (HANDLE)handle.Handle;
+
 		var recordsAvailable = new PinnableBox<uint>(0);
-		unsafe
-		{
-			fixed (uint* pRecordsAvailable = recordsAvailable)
-				if (!Windows.GetNumberOfConsoleInputEvents(inputHandle, pRecordsAvailable))
-					throw new Win32Exception();
-		}
+		fixed (uint* pRecordsAvailable = recordsAvailable)
+			if (!Windows.GetNumberOfConsoleInputEvents(inputHandle, pRecordsAvailable))
+				throw new Win32Exception();
 
 		var ret = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable.Value);
 		var buffer = UnsafeArrayScope.GetArray(ret);
 
 		var recordsRead = new PinnableBox<uint>(0);
-		unsafe
+		fixed (INPUT_RECORD* pBuffer = buffer)
+		fixed (uint* pRecordsRead = recordsRead)
 		{
-			fixed (INPUT_RECORD* pBuffer = buffer)
-			fixed (uint* pRecordsRead = recordsRead)
+			const int CONSOLE_READ_NOWAIT = 0x0002;
+			if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, pRecordsRead, CONSOLE_READ_NOWAIT))
 			{
-				const int CONSOLE_READ_NOWAIT = 0x0002;
-				if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, pRecordsRead, CONSOLE_READ_NOWAIT))
-				{
-					if (buffer is not null)
-						ret.Dispose();
-					throw new Win32Exception();
-				}
+				if (buffer is not null)
+					ret.Dispose();
+				throw new Win32Exception();
 			}
 		}
 
