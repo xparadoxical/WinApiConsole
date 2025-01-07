@@ -20,7 +20,7 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 		return tcs.Task;
 	}
 
-	public unsafe ArrayPoolScope<INPUT_RECORD> ReadEachInput()
+	public unsafe ArrayPoolScope<INPUT_RECORD> ReadInputs()
 	{
 		var inputHandle = (HANDLE)handle.Handle;
 
