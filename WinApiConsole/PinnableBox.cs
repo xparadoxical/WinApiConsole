@@ -1,5 +1,5 @@
 ﻿namespace WinApiConsole;
-public sealed class PinnableBox<T>(T? value)
+internal sealed class PinnableBox<T>(T? value)
 {
 	private T? _value = value;
 	public ref T? Value => ref _value;
