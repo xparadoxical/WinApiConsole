@@ -22,7 +22,7 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 
 	public unsafe ArrayPoolScope<INPUT_RECORD> ReadInputs()
 	{
-		var inputHandle = (HANDLE)handle.Handle;
+		var inputHandle = (HANDLE)handle.RawHandle;
 
 		var recordsAvailable = new PinnableBox<uint>(0);
 		fixed (uint* pRecordsAvailable = recordsAvailable)

@@ -15,7 +15,7 @@ public class SafeStandardInputHandle : SafeStandardHandle
 		static extern EventWaitHandle EventWaitHandleConstructor(SafeWaitHandle handle);
 	}
 
-	public nint Handle => handle;
+	public nint RawHandle => handle;
 
 	public EventWaitHandle EventHandle { get; }
 }
