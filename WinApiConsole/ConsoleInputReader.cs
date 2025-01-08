@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 using Hertzole.Buffers;
 
@@ -24,20 +25,18 @@ public class ConsoleInputReader(SafeStandardInputHandle handle)
 	{
 		var inputHandle = (HANDLE)handle.RawHandle;
 
-		var recordsAvailable = new PinnableBox<uint>(0);
-		fixed (uint* pRecordsAvailable = recordsAvailable)
-			if (!Windows.GetNumberOfConsoleInputEvents(inputHandle, pRecordsAvailable))
-				throw new Win32Exception();
+		Unsafe.SkipInit(out uint recordsAvailable);
+		if (!Windows.GetNumberOfConsoleInputEvents(inputHandle, &recordsAvailable))
+			throw new Win32Exception();
 
-		var ret = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable.Value);
+		var ret = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable);
 		var buffer = UnsafeArrayScope.GetArray(ret);
 
-		var recordsRead = new PinnableBox<uint>(0);
+		Unsafe.SkipInit(out uint recordsRead);
 		fixed (INPUT_RECORD* pBuffer = buffer)
-		fixed (uint* pRecordsRead = recordsRead)
 		{
 			const int CONSOLE_READ_NOWAIT = 0x0002;
-			if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, pRecordsRead, CONSOLE_READ_NOWAIT))
+			if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, &recordsRead, CONSOLE_READ_NOWAIT))
 			{
 				if (buffer is not null)
 					ret.Dispose();
