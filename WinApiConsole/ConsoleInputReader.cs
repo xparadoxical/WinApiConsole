@@ -7,9 +7,9 @@ using Hertzole.Buffers;
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
-public class ConsoleInputReader(SafeStandardInputHandle handle)
+public class ConsoleInputReader(StandardInputHandle handle)
 {
-	public void SetHandle(SafeStandardInputHandle newHandle) => handle = newHandle;
+	public void SetHandle(StandardInputHandle newHandle) => handle = newHandle;
 
 	public Task WhenInputAvailable()
 	{

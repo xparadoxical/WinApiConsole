@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
-public sealed class SafeStandardOutputHandle : SafeStandardHandle
+public sealed class StandardOutputHandle : StandardHandle
 {
-	public SafeStandardOutputHandle(StandardHandleType type) : base(type) { }
+	public StandardOutputHandle(StandardHandleType type) : base(type) { }
 
-	public SafeStandardOutputHandle(StandardHandleType type, bool ownsHandle) : base(type, ownsHandle) { }
+	public StandardOutputHandle(StandardHandleType type, bool ownsHandle) : base(type, ownsHandle) { }
 
 	public unsafe OutputModes GetConsoleMode()
 	{

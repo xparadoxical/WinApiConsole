@@ -1,5 +1,5 @@
 ﻿using WinApiConsole;
 
-var handle = new SafeStandardInputHandle();
+var handle = new StandardInputHandle();
 var reader = new ConsoleInputReader(handle);
 
