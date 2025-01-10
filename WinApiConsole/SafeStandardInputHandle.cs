@@ -1,6 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 using Microsoft.Win32.SafeHandles;
+
+using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
 
@@ -18,4 +21,13 @@ public class SafeStandardInputHandle : SafeStandardHandle
 	public nint RawHandle => handle;
 
 	public EventWaitHandle EventHandle { get; }
+
+	public unsafe InputModes GetConsoleMode()
+	{
+		Unsafe.SkipInit(out uint modes);
+		if (!Windows.GetConsoleMode((HANDLE)handle, &modes))
+			throw new Win32Exception();
+
+		return (InputModes)modes;
+	}
 }
