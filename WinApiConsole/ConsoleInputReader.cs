@@ -9,7 +9,7 @@ using TerraFX.Interop.Windows;
 namespace WinApiConsole;
 public class ConsoleInputReader(StandardInputHandle handle)
 {
-	public void SetHandle(StandardInputHandle newHandle) => handle = newHandle;
+	public void SetHandle(StandardInputHandle newHandle) => handle = newHandle; //TODO prop?
 
 	public Task WhenInputAvailable()
 	{
@@ -35,8 +35,7 @@ public class ConsoleInputReader(StandardInputHandle handle)
 		Unsafe.SkipInit(out uint recordsRead);
 		fixed (INPUT_RECORD* pBuffer = buffer)
 		{
-			const int CONSOLE_READ_NOWAIT = 0x0002;
-			if (!Interop.Console.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, &recordsRead, CONSOLE_READ_NOWAIT))
+			if (!ConsoleInterop.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, &recordsRead, ConsoleInterop.ReadBehavior.NoWait))
 			{
 				if (buffer is not null)
 					ret.Dispose();
