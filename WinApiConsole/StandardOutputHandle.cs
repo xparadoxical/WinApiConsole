@@ -18,4 +18,10 @@ public sealed class StandardOutputHandle : StandardHandle
 
 		return (OutputModes)modes;
 	}
+
+	public void SetConsoleMode(OutputModes mode)
+	{
+		if (!Windows.SetConsoleMode((HANDLE)handle, (uint)mode))
+			throw new Win32Exception();
+	}
 }

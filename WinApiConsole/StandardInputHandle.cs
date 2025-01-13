@@ -30,4 +30,10 @@ public class StandardInputHandle : StandardHandle
 
 		return (InputModes)modes;
 	}
+
+	public void SetConsoleMode(InputModes mode)
+	{
+		if (!Windows.SetConsoleMode((HANDLE)handle, (uint)mode))
+			throw new Win32Exception();
+	}
 }
