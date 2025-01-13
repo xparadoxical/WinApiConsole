@@ -33,6 +33,9 @@ public class StandardInputHandle : StandardHandle
 
 	public void SetConsoleMode(InputModes mode)
 	{
+		if (mode.HasFlag(InputModes.EchoInput) && !mode.HasFlag(InputModes.LineInput))
+			throw new ArgumentException("EchoInput requires LineInput.");
+
 		if (!Windows.SetConsoleMode((HANDLE)handle, (uint)mode))
 			throw new Win32Exception();
 	}
