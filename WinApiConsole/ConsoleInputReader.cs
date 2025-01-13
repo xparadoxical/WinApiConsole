@@ -21,7 +21,7 @@ public class ConsoleInputReader(StandardInputHandle handle)
 		return tcs.Task;
 	}
 
-	public unsafe ArrayPoolScope<INPUT_RECORD> ReadAvailableInputs()
+	public unsafe ArrayPoolScope<InputRecord> ReadAvailableInputs()
 	{
 		var inputHandle = (HANDLE)handle.RawHandle;
 
@@ -29,20 +29,18 @@ public class ConsoleInputReader(StandardInputHandle handle)
 		if (!Windows.GetNumberOfConsoleInputEvents(inputHandle, &recordsAvailable))
 			throw new Win32Exception();
 
-		var ret = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable);
-		var buffer = UnsafeArrayScope.GetArray(ret);
+		using var nativeRecords = ArrayPool<INPUT_RECORD>.Shared.RentScope((int)recordsAvailable);
 
 		Unsafe.SkipInit(out uint recordsRead);
-		fixed (INPUT_RECORD* pBuffer = buffer)
+		fixed (INPUT_RECORD* pBuffer = UnsafeArrayScope.GetArray(nativeRecords))
 		{
 			if (!ConsoleInterop.ReadConsoleInputEx(inputHandle, pBuffer, recordsAvailable, &recordsRead, ConsoleInterop.ReadBehavior.NoWait))
-			{
-				if (buffer is not null)
-					ret.Dispose();
 				throw new Win32Exception();
-			}
 		}
 
-		return ret;
+		var records = ArrayPool<InputRecord>.Shared.RentScope(nativeRecords.Length);
+		for (int i = 0; i < nativeRecords.Length; i++)
+			records[i] = InputRecord.FromNative(nativeRecords[i]);
+		return records;
 	}
 }
