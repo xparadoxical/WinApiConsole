@@ -8,6 +8,19 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
+  <PropertyGroup Label="packing">
+    <PackageId>WinApiConsole</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>xparadoxical</Authors>
+    <Description>Exposes features of the Windows Console API not available in the BCL</Description>
+    <PackageTags>winapi console input mouse event</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <DebugType>embedded</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn Condition="$(Configuration) != 'Release'">$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Hertzole.ArrayPoolScope" Version="2.2.1" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.26100.1" />
