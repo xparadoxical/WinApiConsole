@@ -6,14 +6,14 @@ using TerraFX.Interop.Windows;
 namespace WinApiConsole;
 public sealed record MouseEvent(
 	Point Position,
-	MouseKeys Keys,
+	MouseButtons Buttons,
 	MouseEventFlags Flags,
 	ScrollDirection ScrollDirection,
 	ControlKeyStates ControlKeys) : InputRecord
 {
 	internal static MouseEvent FromNative(MOUSE_EVENT_RECORD r)
 		=> new(new Point(r.dwMousePosition.X, r.dwMousePosition.Y),
-			(MouseKeys)unchecked((ushort)r.dwButtonState),
+			(MouseButtons)unchecked((ushort)r.dwButtonState),
 			(MouseEventFlags)r.dwEventFlags,
 			(r.dwEventFlags & (uint)MouseEventFlags.WheelMoved, r.dwEventFlags & (uint)MouseEventFlags.HorizontalWheelMoved, (int)r.dwButtonState & ~ushort.MaxValue) switch
 			{

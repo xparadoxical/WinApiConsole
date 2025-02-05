@@ -1,6 +1,6 @@
 ﻿namespace WinApiConsole;
 [Flags]
-public enum MouseKeys : ushort
+public enum MouseButtons : ushort
 {
 	Left = 0x1,
 	Right = 0x2,
