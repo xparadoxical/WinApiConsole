@@ -7,10 +7,16 @@ using Hertzole.Buffers;
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
+
+/// <summary>Provides methods for reading data from a standard input handle.</summary>
 public class ConsoleInputReader(StandardInputHandle handle)
 {
-	public void SetHandle(StandardInputHandle newHandle) => handle = newHandle; //TODO prop?
+	public void SetHandle(StandardInputHandle newHandle) => handle = newHandle;
 
+	/// <summary>
+	/// Creates a task that will complete when the input handle becomes signaled.
+	/// This occurs when the console input buffer receives input.
+	/// </summary>
 	public Task WhenInputAvailable()
 	{
 		var tcs = new TaskCompletionSource();
@@ -21,6 +27,8 @@ public class ConsoleInputReader(StandardInputHandle handle)
 		return tcs.Task;
 	}
 
+	/// <summary>Reads <see cref="InputRecord"/>s from the console input buffer, if any available.</summary>
+	/// <returns>A disposable scope representing an array rented from an <see cref="ArrayPool{T}"/>.</returns>
 	public unsafe ArrayPoolScope<InputRecord> ReadAvailableInputs()
 	{
 		var inputHandle = (HANDLE)handle.RawHandle;

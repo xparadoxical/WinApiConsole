@@ -4,6 +4,9 @@ using System.Drawing;
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
+
+/// <param name="Position">The location of the cursor, in terms of the console screen buffer's character-cell coordinates.</param>
+/// <param name="ControlKeys">The state of the control keys.</param>
 public sealed record MouseEvent(
 	Point Position,
 	MouseButtons Buttons,

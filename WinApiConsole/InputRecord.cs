@@ -3,6 +3,8 @@
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
+
+/// <summary>Describes an input event in the console input buffer.</summary>
 public abstract record InputRecord
 {
 	internal static InputRecord FromNative(INPUT_RECORD r)

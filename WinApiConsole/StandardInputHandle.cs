@@ -8,6 +8,7 @@ using TerraFX.Interop.Windows;
 namespace WinApiConsole;
 
 //SafeConsoleInputHandle? does this require a console input buffer handle and can't use a file handle from redirected stdin?
+/// <summary>A handle to a standard input device of a process.</summary>
 public class StandardInputHandle : StandardHandle
 {
 	public StandardInputHandle() : base(StandardHandleType.Input)
@@ -22,6 +23,7 @@ public class StandardInputHandle : StandardHandle
 
 	public EventWaitHandle EventHandle { get; }
 
+	/// <exception cref="Win32Exception"></exception>
 	public unsafe InputModes GetConsoleMode()
 	{
 		Unsafe.SkipInit(out uint modes);
@@ -31,6 +33,8 @@ public class StandardInputHandle : StandardHandle
 		return (InputModes)modes;
 	}
 
+	/// <exception cref="ArgumentException"><see cref="InputModes.EchoInput"/> was specified without <see cref="InputModes.LineInput"/>.</exception>
+	/// <exception cref="Win32Exception"></exception>
 	public void SetConsoleMode(InputModes mode)
 	{
 		if (mode.HasFlag(InputModes.EchoInput) && !mode.HasFlag(InputModes.LineInput))

@@ -3,6 +3,8 @@
 using TerraFX.Interop.Windows;
 
 namespace WinApiConsole;
+
+/// <summary>A handle to a standard device of a process.</summary>
 public class StandardHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
 	public StandardHandle(StandardHandleType type) : base(false)
