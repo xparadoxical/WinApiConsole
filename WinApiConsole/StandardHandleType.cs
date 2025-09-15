@@ -1,7 +1,9 @@
-﻿namespace WinApiConsole;
+using TerraFX.Interop.Windows;
+
+namespace WinApiConsole;
 public enum StandardHandleType : uint
 {
-	Input = unchecked((uint)-10),
-	Output = unchecked((uint)-11),
-	Error = unchecked((uint)-12)
+	Input = STD.STD_INPUT_HANDLE,
+	Output = STD.STD_OUTPUT_HANDLE,
+	Error = STD.STD_ERROR_HANDLE
 }
